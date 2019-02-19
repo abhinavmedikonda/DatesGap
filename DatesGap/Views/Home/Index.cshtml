@@ -1,0 +1,79 @@
+﻿@model DatesGap.Models.HomeVM
+<html>
+    <head>
+        <script>
+            $(function() {
+                $("#fromDate").datepicker({
+                    changeYear: true,
+                    yearRange: '1950:2050',
+                    onSelect: function(dateText) {
+                        if ($("#fromDate").val() != "" && $("#toDate").val() != "" && isValidDateRange())
+                            $("#form").submit();
+                        else
+                            $("#gap").text("0");
+                    }
+                });
+                $("#toDate").datepicker({
+                    changeYear: true,
+                    yearRange: '1950:2050',
+                    onSelect: function(dateText) {
+                        if ($("#fromDate").val() != "" && $("#toDate").val() != "" && isValidDateRange())
+                            $("#form").submit();
+                        else
+                            $("#gap").text("0");
+                    }
+                });
+                function isValidDateRange() {
+                    if ($("#toDate").val().substr(6, 4) > $("#fromDate").val().substr(6, 4))
+                        return true;
+                    else if ($("#toDate").val().substr(6, 4) < $("#fromDate").val().substr(6, 4)) {
+                        alert("please select a valid date range.")
+                        return false;
+                    }
+                    else if ($("#toDate").val().substr(0, 2) > $("#fromDate").val().substr(0, 2))
+                        return true;
+                    else if ($("#toDate").val().substr(0, 2) < $("#fromDate").val().substr(0, 2)) {
+                        alert("please select a valid date range.")
+                        return false;
+                    }
+                    else if ($("#toDate").val().substr(3, 2) >= $("#fromDate").val().substr(3, 2))
+                        return true;
+                    else {
+                        alert("please select a valid date range.")
+                        return false;
+                    }
+                }
+            });
+        </script>
+    </head>
+    <body>
+        @*<h2>Welcome to ASP.NET MVC @ViewData["Version"] on @ViewData["Runtime"]!</h2>*@
+        @using (Html.BeginForm("Submit", "Home", FormMethod.Post, new { id = "form" }))
+        {
+            <div class="blocks">
+                <div>
+                    <h1>Dates</h1>
+                    <div class="block dates">
+                        <br />
+                        <p>
+                            @Html.LabelFor(m => m.FromDate, "From Date:")
+                            @Html.TextBoxFor(m => m.FromDate, new { id = "fromDate", @readonly = "readonly" })
+                        </p>
+                        <br />
+                        <p>
+                            @Html.LabelFor(m => m.ToDate, "To Date:")
+                            @Html.TextBoxFor(m => m.ToDate, new { id = "toDate", @readonly = "readonly" })
+                        </p>
+                        <br />
+                    </div>
+                </div>
+                <div>
+                    <h1>Gap</h1>
+                    <div class="block gap">
+                        <p id="gap">@Model.Gap</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </body>
+</html>
